@@ -37,9 +37,9 @@ ip_info=`curl -sk https://ip.cooluc.com`;
 
 # script url
 if [ "$isCN" = "CN" ]; then
-    export mirror=https://proxy.gitwarp.com/https://github.com/MrZhuQiu/r4s_build_script/refs/heads/master
+    export mirror=https://proxy.gitwarp.com/https://github.com/MrZhuQiu/r4s_build_script/blob/master/openwrt/build.sh
 else
-    export mirror=https://proxy.gitwarp.com/https://github.com/MrZhuQiu/r4s_build_script/refs/heads/master
+    export mirror=https://proxy.gitwarp.com/https://github.com/MrZhuQiu/r4s_build_script/blob/master/openwrt/build.sh
 fi
 
 # github actions - caddy server
