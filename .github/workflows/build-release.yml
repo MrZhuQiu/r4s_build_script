@@ -127,6 +127,7 @@ jobs:
       id: compile
       continue-on-error: true
       env:
+        SSH_ACTIONS: true 
         git_name: ${{ secrets.username }}
         git_password: ${{ secrets.password }}
       run: |
