@@ -37,6 +37,7 @@ on:
         required: false
         default: ''
         type: string
+        
       build_options:
         description: 'Build options (separate multiple options with spaces)'
         required: false
@@ -123,6 +124,8 @@ jobs:
         echo "Cache restored from key: ${{ github.event.inputs.device }}"
 
     - name: Compile OpenWrt
+      if: |  # ➡️ 新增条件判断
+        env.SSH_ACTIONS != 'true' || steps.ssh_debugging.outcome == 'success'
       working-directory: /builder
       id: compile
       continue-on-error: true
