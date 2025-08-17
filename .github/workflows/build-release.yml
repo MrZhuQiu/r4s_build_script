@@ -86,12 +86,12 @@ jobs:
       if: env.SSH_ACTIONS == 'true'  # 通过环境变量控制开关
       id: ssh_debugging              # 标识步骤供后续引用
       run: |
-        sudo apt-get install -y tmate
-        tmate -S /tmp/tmate.sock new-session -d
-        tmate -S /tmp/tmate.sock wait tmate-ready
-        echo "SSH: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
-        echo "Web: $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')"
-        timeout 30m tmate -S /tmp/tmate.sock wait tmate-exit || true
+       sudo apt-get install -y tmate  # 安装 tmate
+       tmate -S /tmp/tmate.sock new-session -d  # 启动后台会话
+       tmate -S /tmp/tmate.sock wait tmate-ready  # 等待会话就绪
+       echo "SSH: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"  # 输出 SSH 连接命令
+       echo "Web: $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')"  # 输出网页连接
+       timeout 30m tmate -S /tmp/tmate.sock wait tmate-exit || true  # 等待 30 分钟或手动退出
 # 🔼 插入结束
 
     - name: Install Caddy Server
@@ -144,6 +144,7 @@ jobs:
       continue-on-error: true
       env:
         SSH_ACTIONS: true 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 用于提交修改
         git_name: ${{ secrets.username }}
         git_password: ${{ secrets.password }}
       run: |
