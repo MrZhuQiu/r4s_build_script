@@ -81,6 +81,19 @@ jobs:
         uname -a
         echo
 
+# 🔽 插入开始：新增 SSH 调试步骤（核心修改）
+    - name: Setup SSH for Debugging
+      if: env.SSH_ACTIONS == 'true'  # 通过环境变量控制开关
+      id: ssh_debugging              # 标识步骤供后续引用
+      run: |
+        sudo apt-get install -y tmate
+        tmate -S /tmp/tmate.sock new-session -d
+        tmate -S /tmp/tmate.sock wait tmate-ready
+        echo "SSH: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
+        echo "Web: $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')"
+        timeout 30m tmate -S /tmp/tmate.sock wait tmate-exit || true
+# 🔼 插入结束
+
     - name: Install Caddy Server
       run: |
         sudo curl -sL -o /usr/bin/caddy https://github.com/sbwml/r4s_build_script/releases/download/caddy/caddy
