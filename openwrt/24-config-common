@@ -127,6 +127,9 @@ CONFIG_PACKAGE_luci-app-watchcat=y #断网自动检测
 #CONFIG_PACKAGE_luci-app-wolplus=y #网络唤醒
 #CONFIG_PACKAGE_luci-app-zerotier=y #zerotier组建虚拟局域网回家
 CONFIG_PACKAGE_ariang-nginx=y
+CONFIG_PACKAGE_luci-app-ahcp=y #（自己添加的）配置Ad-Hoc配置协议
+###自定义添加openwrt软件源没有的软件
+svn co https://openwrt.org/packages/pkgdata/luci-app-apinger packge/luci-app-apinger #网络延迟监控
 
 ### ImmortalWrt Proxy - nft
 CONFIG_PACKAGE_luci-app-homeproxy=y
