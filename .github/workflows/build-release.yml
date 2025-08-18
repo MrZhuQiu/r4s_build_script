@@ -104,18 +104,17 @@ jobs:
 
   # 🔽 插入开始：新增 SSH 调试步骤（核心修改）
     - name: Setup SSH for Debugging
-      if: env.SSH_ACTIONS == 'true'  # 通过环境变量控制开关
-      id: ssh_debugging              # 标识步骤供后续引用
-      run: |
-       sudo apt-get install -y tmate  # 安装 tmate
-       tmate -S /tmp/tmate.sock new-session -d  # 启动后台会话
-       tmate -S /tmp/tmate.sock wait tmate-ready  # 等待会话就绪
-      # 输出连接信息（带分组折叠）
-       echo "::group::🔑 SSH Connection Info"  
-       echo "SSH: $(tmate -S /tmp/tmate.sock display -p \"#{tmate_ssh}\")"
-       echo "Web: $(tmate -S /tmp/tmate.sock display -p \"#{tmate_web}\")"
-       echo "::endgroup::" # 结束日志组
-        timeout 60m tmate -S /tmp/tmate.sock wait tmate-exit # 持续等待直到超时或手动退出
+      if: env.SSH_ACTIONS == 'true'
+      id: ssh_debugging
+      run: |  # 注意管道符后无空格
+        sudo apt-get install -y tmate
+        tmate -S /tmp/tmate.sock new-session -d
+        tmate -S /tmp/tmate.sock wait tmate-ready
+        echo "::group::🔑 SSH Connection Info"  # 统一缩进2空格
+        echo "SSH: $(tmate -S /tmp/tmate.sock display -p \"#{tmate_ssh}\")"  # 转义双引号
+        echo "Web: $(tmate -S /tmp/tmate.sock display -p \"#{tmate_web}\")"
+        echo "::endgroup::"
+        timeout 60m tmate -S /tmp/tmate.sock wait tmate-exit
   # 🔼 插入结束
 
     - name: Restore Cached
