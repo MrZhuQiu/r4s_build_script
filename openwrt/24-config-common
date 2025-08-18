@@ -114,7 +114,7 @@ CONFIG_PACKAGE_luci-app-oaf=y #应用过滤
 #CONFIG_PACKAGE_luci-app-openlist2=y #网盘挂载软件openlist
 #CONFIG_PACKAGE_luci-app-qbittorrent=y #qbittorrent下载软件
 CONFIG_PACKAGE_luci-app-ramfree=y #	内存释放
-CONFIG_PACKAGE_luci-app-samba4=y #smb
+#CONFIG_PACKAGE_luci-app-samba4=y #smb
 CONFIG_PACKAGE_luci-app-socat=y #好用的端口转发
 CONFIG_PACKAGE_luci-app-sqm=y #是OpenWrt的启动画面和动画配置工具
 CONFIG_PACKAGE_luci-app-ttyd=y #类似于ssh连接 使用命令行
@@ -127,7 +127,7 @@ CONFIG_PACKAGE_luci-app-watchcat=y #断网自动检测
 #CONFIG_PACKAGE_luci-app-wolplus=y #网络唤醒
 #CONFIG_PACKAGE_luci-app-zerotier=y #zerotier组建虚拟局域网回家
 CONFIG_PACKAGE_ariang-nginx=y
-CONFIG_PACKAGE_luci-app-ahcp=y #（自己添加的）配置Ad-Hoc配置协议
+#CONFIG_PACKAGE_luci-app-ahcp=y #（自己添加的）配置Ad-Hoc配置协议
 ###自定义添加openwrt软件源没有的软件
 svn co https://openwrt.org/packages/pkgdata/luci-app-apinger packge/luci-app-apinger #网络延迟监控
 
@@ -152,13 +152,13 @@ CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin is not set
 
 ### DDNS Scripts
-CONFIG_PACKAGE_ddns-scripts=y
-CONFIG_PACKAGE_ddns-scripts-aliyun=y
-CONFIG_PACKAGE_ddns-scripts-cloudflare=y
-CONFIG_PACKAGE_ddns-scripts-dnspod=y
-CONFIG_PACKAGE_ddns-scripts-freedns=y
-CONFIG_PACKAGE_ddns-scripts-godaddy=y
-CONFIG_PACKAGE_ddns-scripts-services=y
+#CONFIG_PACKAGE_ddns-scripts=y
+#CONFIG_PACKAGE_ddns-scripts-aliyun=y
+#CONFIG_PACKAGE_ddns-scripts-cloudflare=y
+#CONFIG_PACKAGE_ddns-scripts-dnspod=y
+#CONFIG_PACKAGE_ddns-scripts-freedns=y
+#CONFIG_PACKAGE_ddns-scripts-godaddy=y
+#CONFIG_PACKAGE_ddns-scripts-services=y
 
 ### L2TP
 CONFIG_PACKAGE_kmod-l2tp=y
