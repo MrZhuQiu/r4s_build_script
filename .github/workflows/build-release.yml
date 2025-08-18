@@ -80,20 +80,7 @@ jobs:
         echo -e "\n\e[1;32mKernel:\e[0m"
         uname -a
         echo
-
-# 🔽 插入开始：新增 SSH 调试步骤（核心修改）
-    - name: Setup SSH for Debugging
-      if: env.SSH_ACTIONS == 'true'  # 通过环境变量控制开关
-      id: ssh_debugging              # 标识步骤供后续引用
-      run: |
-       sudo apt-get install -y tmate  # 安装 tmate
-       tmate -S /tmp/tmate.sock new-session -d  # 启动后台会话
-       tmate -S /tmp/tmate.sock wait tmate-ready  # 等待会话就绪
-       echo "SSH: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"  # 输出 SSH 连接命令
-       echo "Web: $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')"  # 输出网页连接
-       timeout 30m tmate -S /tmp/tmate.sock wait tmate-exit || true  # 等待 30 分钟或手动退出
-# 🔼 插入结束
-
+        
     - name: Install Caddy Server
       run: |
         sudo curl -sL -o /usr/bin/caddy https://github.com/sbwml/r4s_build_script/releases/download/caddy/caddy
@@ -114,6 +101,23 @@ jobs:
 
     - name: Install LLVM
       uses: sbwml/actions@install-llvm
+
+  # 🔽 插入开始：新增 SSH 调试步骤（核心修改）
+    - name: Setup SSH for Debugging
+      if: env.SSH_ACTIONS == 'true'  # 通过环境变量控制开关
+      id: ssh_debugging              # 标识步骤供后续引用
+      run: |
+       sudo apt-get install -y tmate  # 安装 tmate
+       tmate -S /tmp/tmate.sock new-session -d  # 启动后台会话
+       tmate -S /tmp/tmate.sock wait tmate-ready  # 等待会话就绪
+      # 输出连接信息（带分组折叠）
+       echo "::group::🔑 SSH Connection Info"
+       echo "SSH Command: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
+       echo "Web URL: $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')"
+       echo "::endgroup::"
+      # 持续等待直到超时或手动退出
+        timeout 60m tmate -S /tmp/tmate.sock wait tmate-exit
+  # 🔼 插入结束
 
     - name: Restore Cached
       if: ${{ github.event.inputs.ccache == 'true' && github.event.inputs.device != 'armv8' && github.event.inputs.device != 'nanopi-r4s' }}
@@ -143,14 +147,27 @@ jobs:
       id: compile
       continue-on-error: true
       env:
-        SSH_ACTIONS: true 
+        #SSH_ACTIONS: true 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 用于提交修改
+        ACTIONS_RUNTIME_TOKEN: ${{ secrets.ACTIONS_RUNTIME_TOKEN }}
+        ACTIONS_ID_TOKEN_REQUEST_URL: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_URL }}
+        ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ secrets.ACTIONS_ID_TOKEN_REQUEST_TOKEN }}
         git_name: ${{ secrets.username }}
         git_password: ${{ secrets.password }}
       run: |
+        ###添加错误处理
+        set -euo pipefail
+        
         export ${{ github.event.inputs.build_options }} LAN=${{ github.event.inputs.lan_addr }} USE_GCC15=y
         [ ${{ github.event.inputs.ccache }} = 'true' ] && export ENABLE_CCACHE=y
         [ -n ${{ github.event.inputs.root_password }} ] && export ROOT_PASSWORD="${{ github.event.inputs.root_password }}"
+          
+        ### 添加编译前检查
+        echo "::group::🔧 Pre-compilation checks"
+        df -h
+        ls -lha /builder
+        echo "::endgroup::"
+        ### 执行编译
         bash <(curl -sS http://127.0.0.1:8080/build.sh) ${{ env.build_version }} ${{ github.event.inputs.device }}
         cd openwrt
         if [ "${{ github.event.inputs.version }}" = release ]; then
