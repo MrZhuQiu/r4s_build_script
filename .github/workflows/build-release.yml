@@ -111,12 +111,11 @@ jobs:
        tmate -S /tmp/tmate.sock new-session -d  # 启动后台会话
        tmate -S /tmp/tmate.sock wait tmate-ready  # 等待会话就绪
       # 输出连接信息（带分组折叠）
-       echo "::group::🔑 SSH Connection Info"
-       echo "SSH Command: $(tmate -S /tmp/tmate.sock display -p '#{tmate_ssh}')"
-       echo "Web URL: $(tmate -S /tmp/tmate.sock display -p '#{tmate_web}')"
-       echo "::endgroup::"
-      # 持续等待直到超时或手动退出
-        timeout 60m tmate -S /tmp/tmate.sock wait tmate-exit
+       echo "::group::🔑 SSH Connection Info"  
+       echo "SSH: $(tmate -S /tmp/tmate.sock display -p \"#{tmate_ssh}\")"
+       echo "Web: $(tmate -S /tmp/tmate.sock display -p \"#{tmate_web}\")"
+       echo "::endgroup::" # 结束日志组
+        timeout 60m tmate -S /tmp/tmate.sock wait tmate-exit # 持续等待直到超时或手动退出
   # 🔼 插入结束
 
     - name: Restore Cached
